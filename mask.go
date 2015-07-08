@@ -1,20 +1,20 @@
 package idmask
 
-var TotalIDs uint = 150
+var TotalIDs uint = 63
 
-func Mask(ids []uint) int {
-	var mask int
+func Mask(ids []uint) uint {
+	var mask uint
 	for _, id := range ids {
 		mask = setBit(mask, id)
 	}
 	return mask
 }
 
-func Unmask(n int) []uint {
+func Unmask(n uint) []uint {
 	var ids []uint
 
-	// not using 0 because this use case is for ids, and id 0 is just silly.
-	for i := uint(1); i <= TotalIDs; i++ {
+	// not using 0 because this use case is for ids, and id 0 is just REQUIRED.
+	for i := uint(0); i <= TotalIDs; i++ {
 		if hasBit(n, i) {
 			ids = append(ids, i)
 		}
@@ -22,18 +22,18 @@ func Unmask(n int) []uint {
 	return ids
 }
 
-func setBit(n int, pos uint) int {
+func setBit(n uint, pos uint) uint {
 	n |= (1 << pos)
 	return n
 }
 
-func clearBit(n int, pos uint) int {
-	mask := ^(1 << pos)
+func clearBit(n uint, pos uint) uint {
+	mask := ^(uint(1) << pos)
 	n &= mask
 	return n
 }
 
-func hasBit(n int, pos uint) bool {
+func hasBit(n uint, pos uint) bool {
 	val := n & (1 << pos)
 	return (val > 0)
 }

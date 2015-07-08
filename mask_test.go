@@ -12,7 +12,7 @@ func TestIDMask(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unable to converte binary to int - `%v`", err)
 	}
-	if got, want := bits, int(btoi); got != want {
+	if got, want := bits, uint(btoi); got != want {
 		t.Errorf("got `%d` (%b), want `%d` (%b)", got, got, want, want)
 	}
 
@@ -24,12 +24,13 @@ func TestIDMask(t *testing.T) {
 
 func TestIDMaskLarger(t *testing.T) {
 	originalIDs := []uint{1, 3, 5, 8, 140, 150, 6, 2, 62, 63, 63, 127, 128, 129}
+	onlyIDsThatMatter := []uint{1, 3, 5, 8, 6, 2, 62, 63}
 
 	bits := Mask(originalIDs)
 	restoredIDs := Unmask(bits)
 
-	if got, want := restoredIDs, originalIDs; !listEqual(got, want) {
-		t.Errorf("got %v, want %v", restoredIDs, originalIDs)
+	if got, want := restoredIDs, onlyIDsThatMatter; !listEqual(got, want) {
+		t.Errorf("got %v, want %v", restoredIDs, onlyIDsThatMatter)
 	}
 }
 
@@ -37,7 +38,7 @@ func listEqual(a, b []uint) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	hashA := make(map[uint]int)
+	hashA := make(map[uint]uint)
 
 	for _, element := range a {
 		if value, ok := hashA[element]; ok {
